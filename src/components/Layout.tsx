@@ -10,9 +10,13 @@ import {
   Settings,
   MenuIcon,
   XIcon,
-  Globe
+  Globe,
+  LogOut,
+  User
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from './ui/button';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,6 +26,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
   
   // Close menu on route change or if screen size changes from mobile to desktop
   useEffect(() => {
@@ -82,7 +87,14 @@ export function Layout({ children }: LayoutProps) {
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Additional header elements can go here */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium hidden md:inline-block">
+                {user?.email}
+              </span>
+              <Button variant="ghost" size="icon" onClick={logout} title="Logout">
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -113,6 +125,17 @@ export function Layout({ children }: LayoutProps) {
                 <span>{item.name}</span>
               </Link>
             ))}
+            
+            <div className="pt-4 mt-4 border-t">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={logout}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            </div>
           </nav>
         </aside>
         
